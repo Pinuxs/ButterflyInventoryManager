@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Butterfly Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+        }
+
+        header {
+            background-color: #4caf50;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        header button {
+            background-color: white;
+            color: #4caf50;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        header button:hover {
+            background-color: #d4edda;
+        }
+
+        .container {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .card {
+            flex: 0 0 auto;
+            width: 200px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+        }
+
+        .card p {
+            font-size: 16px;
+            margin: 5px 0;
+            display: none;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .modal table th, .modal table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .modal table th {
+            background-color: #f4f4f4;
+        }
+
+        .modal button {
+            padding: 8px 15px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .modal button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Butterfly Management</h1>
+        <div class="header-buttons">
+            <button id="viewStockButton">View All Stock</button>
+            <button id="editButton">Manage Stock</button>
+        </div>
+    </header>
+    
+    <div class="container" id="butterflyContainer">
+        <!-- Butterfly cards will be dynamically added here -->
+    </div>
+
+    <div class="overlay" id="editModal">
+        <div class="modal">
+            <h2>Manage Butterfly Stock</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Butterfly</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="stockTable">
+                    <!-- Stock rows will be dynamically added here -->
+                </tbody>
+            </table>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const butterflies = [
+            { name: "Monarch", image: "https://via.placeholder.com/200", stock: 15 },
+            { name: "Swallowtail", image: "https://via.placeholder.com/200", stock: 10 },
+            { name: "Painted Lady", image: "https://via.placeholder.com/200", stock: 8 },
+            { name: "Blue Morpho", image: "https://via.placeholder.com/200", stock: 5 }
+        ];
+
+        const container = document.getElementById('butterflyContainer');
+        const editModal = document.getElementById('editModal');
+        const stockTable = document.getElementById('stockTable');
+
+        function renderButterflies() {
+            container.innerHTML = '';
+            butterflies.forEach((butterfly, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                card.innerHTML = `
+                    <img src="${butterfly.image}" alt="${butterfly.name}">
+                    <h3>${butterfly.name}</h3>
+                    <p id="stock-${index}" style="display: none;">Stock: ${butterfly.stock}</p>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function toggleStockVisibility() {
+            butterflies.forEach((_, index) => {
+                const stockElement = document.getElementById(`stock-${index}`);
+                stockElement.style.display = stockElement.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+
+        function openEditModal() {
+            stockTable.innerHTML = '';
+            butterflies.forEach((butterfly, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${butterfly.name}</td>
+                    <td><input type="number" value="${butterfly.stock}" id="input-stock-${index}" style="width: 60px;"></td>
+                    <td>
+                        <button onclick="updateStock(${index})">Save</button>
+                    </td>
+                `;
+                stockTable.appendChild(row);
+            });
+            editModal.style.display = 'flex';
+        }
+
+        function updateStock(index) {
+            const stockInput = document.getElementById(`input-stock-${index}`);
+            const newStock = parseInt(stockInput.value);
+            if (!isNaN(newStock)) {
+                butterflies[index].stock = newStock;
+                renderButterflies();
+            } else {
+                alert('Please enter a valid number.');
+            }
+        }
+
+        function closeModal() {
+            editModal.style.display = 'none';
+        }
+
+        document.getElementById('editButton').addEventListener('click', openEditModal);
+        document.getElementById('viewStockButton').addEventListener('click', toggleStockVisibility);
+
+        renderButterflies();
+    </script>
+</body>
+</html>
