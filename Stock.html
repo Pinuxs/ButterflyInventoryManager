@@ -40,16 +40,29 @@
             background-color: #d4edda;
         }
 
+        .search-bar {
+            margin: 10px;
+            text-align: center;
+        }
+
+        .search-bar input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
         .container {
             display: flex;
-            overflow-x: auto;
+            flex-direction: column;
+            align-items: center;
             gap: 20px;
             padding: 20px;
             margin-top: 10px;
         }
 
         .card {
-            flex: 0 0 auto;
             width: 200px;
             background-color: white;
             border-radius: 8px;
@@ -172,7 +185,11 @@
             <button id="editButton">Manage Stock</button>
         </div>
     </header>
-    
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search for butterflies...">
+    </div>
+
     <div class="container" id="butterflyContainer">
         <!-- Butterfly cards will be dynamically added here -->
     </div>
@@ -198,41 +215,39 @@
 
     <script>
         const butterflies = [
-            { name: "Monarch", image: "https://via.placeholder.com/200", stock: 15 , price: 10},
-            { name: "Swallowtail", image: "https://via.placeholder.com/200", stock: 10, price: 10 },
-            { name: "Painted Lady", image: "https://via.placeholder.com/200", stock: 8, price: 10 },
-            { name: "Blue Morpho", image: "https://via.placeholder.com/200", stock: 5, price: 10 }
+            { name: "Monarch", image: "https://via.placeholder.com/200", stock: 15 },
+            { name: "Swallowtail", image: "https://via.placeholder.com/200", stock: 10 },
+            { name: "Painted Lady", image: "https://via.placeholder.com/200", stock: 8 },
+            { name: "Blue Morpho", image: "https://via.placeholder.com/200", stock: 5 }
         ];
 
         const container = document.getElementById('butterflyContainer');
         const editModal = document.getElementById('editModal');
         const stockTable = document.getElementById('stockTable');
+        const searchInput = document.getElementById('searchInput');
 
-        function renderButterflies() {
+        function renderButterflies(filter = "") {
             container.innerHTML = '';
-            butterflies.forEach((butterfly, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
+            butterflies
+                .filter(butterfly => butterfly.name.toLowerCase().includes(filter.toLowerCase()))
+                .forEach((butterfly, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
 
-                card.innerHTML = `
-                    <img src="${butterfly.image}" alt="${butterfly.name}">
-                    <h3>${butterfly.name}</h3>
-                    <p id="stock-${index}" style="display: none;">Stock: ${butterfly.stock}</p>
-                    <p id="price-${index}" style="display: none;">Price: ${butterfly.price}</p>
-                `;
+                    card.innerHTML = `
+                        <img src="${butterfly.image}" alt="${butterfly.name}">
+                        <h3>${butterfly.name}</h3>
+                        <p id="stock-${index}" style="display: none;">Stock: ${butterfly.stock}</p>
+                    `;
 
-                container.appendChild(card);
-            });
+                    container.appendChild(card);
+                });
         }
 
         function toggleStockVisibility() {
             butterflies.forEach((_, index) => {
                 const stockElement = document.getElementById(`stock-${index}`);
                 stockElement.style.display = stockElement.style.display === 'none' ? 'block' : 'none';
-            });
-            butterflies.forEach((_, index) => {
-                const priceElement = document.getElementById(`price-${index}`);
-                priceElement.style.display = priceElement.style.display === 'none' ? 'block' : 'none';
             });
         }
 
@@ -266,6 +281,10 @@
         function closeModal() {
             editModal.style.display = 'none';
         }
+
+        searchInput.addEventListener('input', (e) => {
+            renderButterflies(e.target.value);
+        });
 
         document.getElementById('editButton').addEventListener('click', openEditModal);
         document.getElementById('viewStockButton').addEventListener('click', toggleStockVisibility);
