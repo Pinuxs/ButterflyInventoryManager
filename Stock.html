@@ -217,26 +217,26 @@
 
     <script>
         const butterflies = [
-    { name: "Monarch", image: "https://via.placeholder.com/200", stock: 15 },
-    { name: "Swallowtail", image: "https://via.placeholder.com/200", stock: 10 },
-    { name: "Painted Lady", image: "https://via.placeholder.com/200", stock: 8 },
-    { name: "Blue Morpho", image: "https://via.placeholder.com/200", stock: 5 },
-    { name: "Red Admiral", image: "https://via.placeholder.com/200", stock: 12 },
-    { name: "Zebra Longwing", image: "https://via.placeholder.com/200", stock: 7 },
-    { name: "Great Eggfly", image: "https://via.placeholder.com/200", stock: 9 },
-    { name: "Cabbage White", image: "https://via.placeholder.com/200", stock: 20 },
-    { name: "Clouded Yellow", image: "https://via.placeholder.com/200", stock: 14 },
-    { name: "Peacock", image: "https://via.placeholder.com/200", stock: 6 },
-    { name: "Tiger Swallowtail", image: "https://via.placeholder.com/200", stock: 8 },
-    { name: "Buckeye", image: "https://via.placeholder.com/200", stock: 11 },
-    { name: "Glasswing", image: "https://via.placeholder.com/200", stock: 4 },
-    { name: "Comma", image: "https://via.placeholder.com/200", stock: 9 },
-    { name: "Speckled Wood", image: "https://via.placeholder.com/200", stock: 13 },
-    { name: "Sulphur", image: "https://via.placeholder.com/200", stock: 18 },
-    { name: "Adonis Blue", image: "https://via.placeholder.com/200", stock: 7 },
-    { name: "Meadow Brown", image: "https://via.placeholder.com/200", stock: 16 },
-    { name: "Orange Tip", image: "https://via.placeholder.com/200", stock: 10 },
-    { name: "Purple Emperor", image: "https://via.placeholder.com/200", stock: 5 }
+    { name: "Monarch", image: "https://via.placeholder.com/200", stock: 15, price: 10 },
+    { name: "Swallowtail", image: "https://via.placeholder.com/200", stock: 10, price: 10 },
+    { name: "Painted Lady", image: "https://via.placeholder.com/200", stock: 8, price: 10 },
+    { name: "Blue Morpho", image: "https://via.placeholder.com/200", stock: 5, price: 10 },
+    { name: "Red Admiral", image: "https://via.placeholder.com/200", stock: 12, price: 10 },
+    { name: "Zebra Longwing", image: "https://via.placeholder.com/200", stock: 7, price: 10 },
+    { name: "Great Eggfly", image: "https://via.placeholder.com/200", stock: 9, price: 10 },
+    { name: "Cabbage White", image: "https://via.placeholder.com/200", stock: 20, price: 10 },
+    { name: "Clouded Yellow", image: "https://via.placeholder.com/200", stock: 14, price: 10 },
+    { name: "Peacock", image: "https://via.placeholder.com/200", stock: 6, price: 10 },
+    { name: "Tiger Swallowtail", image: "https://via.placeholder.com/200", stock: 8, price: 10 },
+    { name: "Buckeye", image: "https://via.placeholder.com/200", stock: 11, price: 10 },
+    { name: "Glasswing", image: "https://via.placeholder.com/200", stock: 4, price: 10 },
+    { name: "Comma", image: "https://via.placeholder.com/200", stock: 9, price: 10 },
+    { name: "Speckled Wood", image: "https://via.placeholder.com/200", stock: 13, price: 10 },
+    { name: "Sulphur", image: "https://via.placeholder.com/200", stock: 18, price: 10 },
+    { name: "Adonis Blue", image: "https://via.placeholder.com/200", stock: 7, price: 10 },
+    { name: "Meadow Brown", image: "https://via.placeholder.com/200", stock: 16, price: 10 },
+    { name: "Orange Tip", image: "https://via.placeholder.com/200", stock: 10, price: 10 },
+    { name: "Purple Emperor", image: "https://via.placeholder.com/200", stock: 5, price: 10 }
 ]
 
 
@@ -257,6 +257,7 @@
                         <img src="${butterfly.image}" alt="${butterfly.name}">
                         <h3>${butterfly.name}</h3>
                         <p id="stock-${index}" style="display: none;">Stock: ${butterfly.stock}</p>
+                        <p id="price-${index}" style="display: none;">Price: ${butterfly.price}</p>
                     `;
 
                     container.appendChild(card);
@@ -267,6 +268,10 @@
             butterflies.forEach((_, index) => {
                 const stockElement = document.getElementById(`stock-${index}`);
                 stockElement.style.display = stockElement.style.display === 'none' ? 'block' : 'none';
+            });
+            butterflies.forEach((_, index) => {
+                const priceElement = document.getElementById(`price-${index}`);
+                priceElement.style.display = priceElement.style.display === 'none' ? 'block' : 'none';
             });
         }
 
