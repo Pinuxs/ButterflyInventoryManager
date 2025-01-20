@@ -97,57 +97,55 @@
     </div>
 
     <script>
-        let displayMode = false;
 
-        // Load products from localStorage on page load
-        window.onload = function() {
-            const savedProducts = JSON.parse(localStorage.getItem('products')) || [];
-            savedProducts.forEach(product => {
-                addProductToDOM(product.name, product.price, product.stock, product.image);
-            });
-        };
-
+        s
+        
+        // Show the product form
         function showProductForm() {
             document.getElementById('product-form').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
-
+        
+        // Close the product form
         function closeProductForm() {
             document.getElementById('product-form').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
             clearForm();
         }
-
+        
+        // Clear the product form inputs
         function clearForm() {
             document.getElementById('product-name').value = '';
             document.getElementById('product-price').value = '';
             document.getElementById('product-stock').value = '';
             document.getElementById('product-image').value = '';
         }
-
-        function addProductDetails() {
+        
+        // Add product details to DOM and GitHub
+        async function addProductDetails() {
             const name = document.getElementById('product-name').value;
             const price = document.getElementById('product-price').value;
             const stock = document.getElementById('product-stock').value;
             const image = document.getElementById('product-image').value || 'https://via.placeholder.com/100';
-
+        
             if (!name || !price || !stock) {
                 alert('Please fill in all fields.');
                 return;
             }
-
+        
             addProductToDOM(name, price, stock, image);
-            saveProductToLocalStorage(name, price, stock, image);
+            await saveProductToGitHub(name, price, stock, image); // Save to GitHub directly
             closeProductForm();
         }
-
+        
+        // Add product to the webpage
         function addProductToDOM(name, price, stock, image) {
             const productList = document.getElementById('product-list');
-
+        
             const product = document.createElement('div');
             product.className = 'product';
             product.setAttribute('data-stock', stock);
-
+        
             product.innerHTML = `
                 <img src="${image}" alt="Product Image">
                 <div class="product-details">
@@ -160,42 +158,49 @@
                     <button onclick="changeStock(this, -1)">-</button>
                 </div>
             `;
-
+        
             productList.appendChild(product);
         }
-
-        function saveProductToLocalStorage(name, price, stock, image) {
+        
+        // Save product to GitHub
+        async function saveProductToGitHub(name, price, stock, image) {
             const products = JSON.parse(localStorage.getItem('products')) || [];
             products.push({ name, price, stock, image });
-            localStorage.setItem('products', JSON.stringify(products));
+        
+            await saveProductsToFile(products);
         }
-
+        
+        // Change the stock of a product
         function changeStock(button, amount) {
             const stockElement = button.parentElement.previousElementSibling.querySelector('.stock');
             const currentStock = parseInt(stockElement.textContent, 10);
             const newStock = currentStock + amount;
-
+        
             stockElement.textContent = newStock < 0 ? 0 : newStock;
-
+        
             const product = button.closest('.product');
             product.setAttribute('data-stock', newStock < 0 ? 0 : newStock);
-
-            // Update stock in localStorage
-            const products = JSON.parse(localStorage.getItem('products')) || [];
+        
+            // Update stock in GitHub
             const name = product.querySelector('.product-details p strong').nextSibling.textContent.trim();
-
+        
+            const products = JSON.parse(localStorage.getItem('products')) || [];
             const productIndex = products.findIndex(p => p.name === name);
             if (productIndex !== -1) {
                 products[productIndex].stock = newStock < 0 ? 0 : newStock;
                 localStorage.setItem('products', JSON.stringify(products));
+                saveProductsToFile(products);
             }
         }
-
+        
+        // Toggle the display mode (hide/show out-of-stock items)
+        let displayMode = false;
+        
         function toggleDisplayMode() {
             displayMode = !displayMode;
-
+        
             const products = document.querySelectorAll('.product');
-
+        
             if (displayMode) {
                 products.forEach(product => {
                     const stock = parseInt(product.getAttribute('data-stock'), 10);
@@ -215,6 +220,7 @@
                 });
             }
         }
-    </script>
+        </script>
+        
 </body>
 </html>
