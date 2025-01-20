@@ -98,7 +98,24 @@
 
     <script>
 
-        s
+async function saveProductsToGitHub(products) {
+    try {
+        const response = await fetch('https://your-backend-url/update-products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(products),
+        });
+
+        if (response.ok) {
+            alert('Products updated successfully!');
+        } else {
+            alert('Failed to update products.');
+        }
+    } catch (error) {
+        console.error('Error updating products:', error);
+        alert('An error occurred while updating products.');
+    }
+}
         
         // Show the product form
         function showProductForm() {
