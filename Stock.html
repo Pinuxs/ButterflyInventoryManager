@@ -151,7 +151,7 @@ async function saveProductsToGitHub(products) {
             }
         
             addProductToDOM(name, price, stock, image);
-            await saveProductToGitHub(name, price, stock, image); // Save to GitHub directly
+            await saveProductsToGitHub(name, price, stock, image); // Save to GitHub directly
             closeProductForm();
         }
         
